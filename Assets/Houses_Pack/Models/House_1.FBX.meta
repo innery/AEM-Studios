@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 28d592096e7e76148945c98658a6c011
+AssetOrigin:
+  serializedVersion: 1
+  productId: 42717
+  packageName: Town Houses Pack
+  packageVersion: 1.2
+  assetPath: Assets/Houses_Pack/Models/House_1.FBX
+  uploadId: 79414
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable:
@@ -194,8 +201,8 @@ ModelImporter:
     second: //RootNode
   externalObjects: {}
   materials:
-    materialImportMode: 1
-    materialName: 1
+    materialImportMode: 2
+    materialName: 2
     materialSearch: 2
     materialLocation: 0
   animations:
@@ -294,10 +301,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 42717
-  packageName: Town Houses Pack
-  packageVersion: 1.2
-  assetPath: Assets/Houses_Pack/Models/House_1.FBX
-  uploadId: 79414
