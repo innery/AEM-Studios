@@ -112,6 +112,8 @@ namespace StarterAssets
         private float targetSpeed = 2;
         private bool _walking = false;
         private float _speedAnimationMultiplier = 0;
+        private bool _aiming = false;
+        private bool _sprinting = false;
 
         private bool IsCurrentDeviceMouse
         {
@@ -128,11 +130,9 @@ namespace StarterAssets
 
         private void Awake()
         {
-            // get a reference to our main camera
-            if (_mainCamera == null)
-            {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-            }
+            _mainCamera = CameraManager.mainCamera.GameObject;
+            CameraManager.playerCamera.m_Follow = CinemachineCameraTarget.transform;
+            CameraManager.aimingCamera.m_Follow = CinemachineCameraTarget.transform;
         }
 
         private void Start()
@@ -157,12 +157,16 @@ namespace StarterAssets
 
         private void Update()
         {
+            _aiming = _input.aim;
+            _sprinting = _input.sprint && _aiming == false;
             _hasAnimator = TryGetComponent(out _animator);
 
             JumpAndGravity();
             GroundedCheck();
 
+            CameraManager.singleton.aiming = _aiming;
             _animator.SetFloat("Armed", armed ? 1f : 0f);
+            _animator.SetFloat("Aimed", _input.aim ? 1f : 0f);
 
             if(_input.walk)
             {
@@ -170,7 +174,7 @@ namespace StarterAssets
                 _walking = !_walking;
             }
             targetSpeed = RunSpeed;
-            if (_input.sprint)
+            if (_sprinting)
             {
                 targetSpeed = SprintSpeed;
                 _speedAnimationMultiplier = 3;
