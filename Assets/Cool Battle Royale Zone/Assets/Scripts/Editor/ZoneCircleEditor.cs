@@ -40,7 +40,7 @@ namespace CoolBattleRoyaleZone
 
 
             EditorGUI.BeginChangeCheck ( ); // begin check of changes of handle
-            var fmh_43_63_638700697037588068 = Quaternion.identity; var handlePos = Handles.FreeMoveHandle ( capPos  , customSize , customSnap ,
+            var fmh_43_63_638700740074224243 = Quaternion.identity; var handlePos = Handles.FreeMoveHandle ( capPos  , customSize , customSnap ,
                                                      Handles.DotHandleCap );
             if ( EditorGUI.EndChangeCheck ( ) ) // if something changed
             {
