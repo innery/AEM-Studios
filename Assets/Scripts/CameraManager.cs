@@ -49,12 +49,12 @@ public class CameraManager : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, _aimLayer))
         {
             _aimTargetPoint = hit.point;
-            _aimTargetObject = hit.transform;
+            
         }
         else
         {
             _aimTargetPoint = ray.GetPoint(1000);
-            _aimTargetObject = null;
+            
         }
     }
 
