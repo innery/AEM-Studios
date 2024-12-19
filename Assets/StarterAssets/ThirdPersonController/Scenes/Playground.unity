@@ -1272,6 +1272,8 @@ MonoBehaviour:
   _leftHand: {fileID: 1715042052}
   _body: {fileID: 1708921017}
   _aimTarget: {fileID: 2055683491}
+  _weaponHandKickDirection: {x: 0, y: 0, z: 0}
+  _weaponBodyKickDirection: {x: -1, y: 0, z: 0}
 --- !u!114 &1762682264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1535,6 +1537,14 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2804875249669174239, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.6260858
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804875249669174239, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.0096107
+      objectReference: {fileID: 0}
     - target: {fileID: 2932597319303842669, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
       propertyPath: m_Follow
       value: 
@@ -1551,6 +1561,18 @@ PrefabInstance:
       propertyPath: _cameraBrain
       value: 
       objectReference: {fileID: 1129121839}
+    - target: {fileID: 6041831911197100813, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.3760858
+      objectReference: {fileID: 0}
+    - target: {fileID: 6041831911197100813, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.41181695
+      objectReference: {fileID: 0}
+    - target: {fileID: 6041831911197100813, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.5096108
+      objectReference: {fileID: 0}
     - target: {fileID: 8740446703593261462, guid: e47a439c4aa9e804cbe1da535bb89e9c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.62608576
