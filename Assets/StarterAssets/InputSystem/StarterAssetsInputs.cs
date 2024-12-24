@@ -16,6 +16,7 @@ namespace StarterAssets
 		public bool shoot;
 		public bool walk;
 		public bool reload;
+		public float switchWeapon;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -56,6 +57,11 @@ namespace StarterAssets
 			MoveInput(value.Get<Vector2>());
 		}
 
+		public void OnSwitchWeapon(InputValue value)
+		{
+			SwitchWeaponInput(value.Get<float>());
+		}
+
 		public void OnLook(InputValue value)
 		{
 			if(cursorInputForLook)
@@ -94,6 +100,11 @@ namespace StarterAssets
 		public void ShootInput(bool newShootState)
 		{
 			shoot = newShootState;
+		}
+
+		public void SwitchWeaponInput(float newSwitchWeaponState)
+		{
+			switchWeapon = newSwitchWeaponState;
 		}
 
 		public void WalkInput(bool newWalkState)

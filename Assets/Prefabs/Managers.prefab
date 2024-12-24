@@ -225,6 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _items:
   - {fileID: 6675615806303023056, guid: 3ffde6c3f0f6a11418e3160d29782928, type: 3}
+  - {fileID: 2125940115461033829, guid: 6b90bcf4bfb7dd640afa6e66093bdb5e, type: 3}
 --- !u!1 &7468831812690787712
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,8 +251,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7468831812690787712}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.62608576, y: -1.213183, z: -0.009610772}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
