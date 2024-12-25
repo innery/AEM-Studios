@@ -113,7 +113,7 @@ MonoBehaviour:
   _id: Scar
   _type: 2
   _ammoID: 7.62x39mm
-  _damage: 1
+  _damage: 30
   _fireRate: 0.1
   _clipSize: 30
   _handKick: 5
