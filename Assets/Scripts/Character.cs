@@ -1,28 +1,29 @@
+using StarterAssets;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.TextCore.Text;
+using UnityEngine.Windows;
 
 public class Character : MonoBehaviour
 {
+
     public bool isLocalPlayer = false;
 
-    [SerializeField] private string _id = "";
-    public string id { get { return _id; } }
-
+    [SerializeField] private string _id = ""; public string id { get { return _id; } }
     [SerializeField] private Transform _weaponHolder = null;
-    private Weapon _weapon = null;
-    public Weapon weapon { get { return _weapon; } }
 
-    private Ammo _ammo = null;
-    public Ammo ammo { get { return _ammo; } }
-
+    private Weapon _weapon = null; public Weapon weapon { get { return _weapon; } }
+    private Ammo _ammo = null; public Ammo ammo { get { return _ammo; } }
     private List<Item> _items = new List<Item>();
     private Animator _animator = null;
     private RigManager _rigManager = null;
     private Weapon _weaponToEquip = null;
-    private bool _reloading = false;
-    public bool reloading { get { return _reloading; } }
-    private bool _switchingWeapon = false;
-    public bool switchingWeapon { get { return _switchingWeapon; } }
+    private bool _reloading = false; public bool reloading { get { return _reloading; } }
+    private bool _switchingWeapon = false; public bool switchingWeapon { get { return _switchingWeapon; } }
 
     private Rigidbody[] _ragdollRigidbodies = null;
     private Collider[] _ragdollColliders = null;
@@ -45,7 +46,6 @@ public class Character : MonoBehaviour
     {
         _ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
         _ragdollColliders = GetComponentsInChildren<Collider>();
-
         if (_ragdollRigidbodies != null)
         {
             for (int i = 0; i < _ragdollRigidbodies.Length; i++)
@@ -53,7 +53,6 @@ public class Character : MonoBehaviour
                 _ragdollRigidbodies[i].mass *= 50;
             }
         }
-
         if (_ragdollColliders != null)
         {
             for (int i = 0; i < _ragdollColliders.Length; i++)
@@ -61,7 +60,6 @@ public class Character : MonoBehaviour
                 _ragdollColliders[i].isTrigger = false;
             }
         }
-
         SetRagdollStatus(false);
         _rigManager = GetComponent<RigManager>();
         _animator = GetComponent<Animator>();
@@ -79,7 +77,7 @@ public class Character : MonoBehaviour
             SetLayer(transform, LayerMask.NameToLayer("NetworkPlayer"));
         }
     }
-    
+
     private void Update()
     {
         bool armed = _weapon != null;
@@ -115,7 +113,7 @@ public class Character : MonoBehaviour
         _animator.SetFloat("Armed", armed ? 1f : 0f);
         _animator.SetFloat("Aimed", _aiming ? 1f : 0f);
     }
-    
+
     private void LateUpdate()
     {
         _lastPosition = transform.position;
@@ -131,11 +129,11 @@ public class Character : MonoBehaviour
             }
         }
     }
-
     public void Initialize(Dictionary<string, int> items)
     {
         if (items != null && PrefabManager.singleton != null)
         {
+            int firstWeaponIndex = -1;
             foreach (var itemData in items)
             {
                 Item prefab = PrefabManager.singleton.GetItemPrefab(itemData.Key);
@@ -143,39 +141,40 @@ public class Character : MonoBehaviour
                 {
                     for (int i = 1; i <= itemData.Value; i++)
                     {
+                        bool done = false;
                         Item item = Instantiate(prefab, transform);
 
-                        if (item is Weapon weapon)
+                        if (item.GetType() == typeof(Weapon))
                         {
+                            Weapon w = (Weapon)item;
                             item.transform.SetParent(_weaponHolder);
-                            item.transform.localPosition = weapon.rightHandPosition;
-                            item.transform.localEulerAngles = weapon.rightHandRotation;
+                            item.transform.localPosition = w.rightHandPosition;
+                            item.transform.localEulerAngles = w.rightHandRotation;
+                            if (firstWeaponIndex < 0)
+                            {
+                                firstWeaponIndex = _items.Count;
+                            }
                         }
-                        else if (item is Ammo ammo)
+                        else if (item.GetType() == typeof(Ammo))
                         {
-                            ammo.amount = itemData.Value;
+                            Ammo a = (Ammo)item;
+                            a.amount = itemData.Value;
+                            done = true;
                         }
 
                         item.gameObject.SetActive(false);
                         _items.Add(item);
+                        if (done)
+                        {
+                            break;
+                        }
                     }
                 }
             }
-
-            // Equip the first weapon automatically
-            EquipFirstWeapon();
-        }
-    }
-
-    private void EquipFirstWeapon()
-    {
-        foreach (var item in _items)
-        {
-            if (item is Weapon firstWeapon)
+            if (firstWeaponIndex >= 0 && _weapon == null)
             {
-                _weaponToEquip = firstWeapon;
+                _weaponToEquip = (Weapon)_items[firstWeaponIndex];
                 OnEquip();
-                break;
             }
         }
     }
@@ -183,47 +182,46 @@ public class Character : MonoBehaviour
     public void ChangeWeapon(float direction)
     {
         int x = direction > 0 ? 1 : direction < 0 ? -1 : 0;
-        if (x != 0 && !_switchingWeapon)
+        if (x != 0 && _switchingWeapon == false)
         {
             if (x > 0)
             {
-                NextWeapon();  // Switch to next weapon
+                NextWeapon();
             }
             else
             {
-                PrevWeapon();  // Switch to previous weapon
+                PrevWeapon();
             }
         }
     }
 
     private void NextWeapon()
     {
-        int current = -1;
         int first = -1;
-        // Loop through all items to find the next weapon
+        int current = -1;
         for (int i = 0; i < _items.Count; i++)
         {
-            if (_items[i] is Weapon weapon)
+            if (_items[i] != null && _items[i].GetType() == typeof(Weapon))
             {
-                // If we find the currently equipped weapon
-                if (_weapon != null && _items[i] == _weapon)
+                if (_weapon != null && _items[i].gameObject == _weapon.gameObject)
                 {
                     current = i;
                 }
-                else if (current >= 0) // After the currently equipped weapon
+                else
                 {
-                    EquipWeapon(weapon);  // Equip the next weapon
-                    return;
-                }
-                else if (first < 0)  // First weapon in the list
-                {
-                    first = i;
+                    if (current >= 0)
+                    {
+                        EquipWeapon((Weapon)_items[i]);
+                        return;
+                    }
+                    else if (first < 0)
+                    {
+                        first = i;
+                    }
                 }
             }
         }
-
-        // If no weapon was found after the current one, equip the first weapon
-        if (current == -1 && first >= 0)
+        if (first >= 0)
         {
             EquipWeapon((Weapon)_items[first]);
         }
@@ -231,32 +229,31 @@ public class Character : MonoBehaviour
 
     private void PrevWeapon()
     {
-        int current = -1;
         int last = -1;
-        // Loop through all items in reverse order to find the previous weapon
+        int current = -1;
         for (int i = _items.Count - 1; i >= 0; i--)
         {
-            if (_items[i] is Weapon weapon)
+            if (_items[i] != null && _items[i].GetType() == typeof(Weapon))
             {
-                // If we find the currently equipped weapon
-                if (_weapon != null && _items[i] == _weapon)
+                if (_weapon != null && _items[i].gameObject == _weapon.gameObject)
                 {
                     current = i;
                 }
-                else if (current >= 0) // After the currently equipped weapon
+                else
                 {
-                    EquipWeapon(weapon);  // Equip the previous weapon
-                    return;
-                }
-                else if (last < 0)  // Last weapon in the list
-                {
-                    last = i;
+                    if (current >= 0)
+                    {
+                        EquipWeapon((Weapon)_items[i]);
+                        return;
+                    }
+                    else if (last < 0)
+                    {
+                        last = i;
+                    }
                 }
             }
         }
-
-        // If no weapon was found before the current one, equip the last weapon
-        if (current == -1 && last >= 0)
+        if (last >= 0)
         {
             EquipWeapon((Weapon)_items[last]);
         }
@@ -264,10 +261,11 @@ public class Character : MonoBehaviour
 
     public void EquipWeapon(Weapon weapon)
     {
-        if (_switchingWeapon || weapon == null) return;  // Don't switch if already switching
-
+        if (_switchingWeapon || weapon == null)
+        {
+            return;
+        }
         _weaponToEquip = weapon;
-
         if (_weapon != null)
         {
             HolsterWeapon();
@@ -275,77 +273,71 @@ public class Character : MonoBehaviour
         else
         {
             _switchingWeapon = true;
-            _animator.SetTrigger("Equip");  // Trigger animation for equipping
+            _animator.SetTrigger("Equip");
         }
     }
 
     private void _EquipWeapon()
     {
-        if (_weaponToEquip != null)
+        if(_weaponToEquip != null)
         {
-            _weapon = _weaponToEquip;  // Update the equipped weapon
+            _weapon = _weaponToEquip;
             _weaponToEquip = null;
-
             if (_weapon.transform.parent != _weaponHolder)
             {
-                _weapon.transform.SetParent(_weaponHolder);  // Attach weapon to the holder
+                _weapon.transform.SetParent(_weaponHolder);
                 _weapon.transform.localPosition = _weapon.rightHandPosition;
                 _weapon.transform.localEulerAngles = _weapon.rightHandRotation;
             }
-
-            _rigManager.SetLeftHandGripData(_weapon.leftHandPosition, _weapon.leftHandRotation);  // Set grip data
-            _weapon.gameObject.SetActive(true);  // Activate weapon
-
-            // Find the corresponding ammo
+            _rigManager.SetLeftHandGripData(_weapon.leftHandPosition, _weapon.leftHandRotation);
+            _weapon.gameObject.SetActive(true);
             _ammo = null;
-            foreach (var item in _items)
+            for (int i = 0; i < _items.Count; i++)
             {
-                if (item is Ammo ammo && _weapon.ammoID == ammo.id)
+                if (_items[i] != null && _items[i].GetType() == typeof(Ammo) && _weapon.ammoID == _items[i].id)
                 {
-                    _ammo = ammo;
+                    _ammo = (Ammo)_items[i];
                     break;
                 }
             }
         }
     }
 
-    public void HolsterWeapon()
+    public void OnEquip()
     {
-        if (_switchingWeapon) return;  // Don't holster if switching weapons
-
-        if (_weapon != null)
-        {
-            _switchingWeapon = true;
-            _animator.SetTrigger("Holster");  // Trigger animation for holstering
-        }
+        _EquipWeapon();
     }
 
     private void _HolsterWeapon()
     {
         if (_weapon != null)
         {
-            _weapon.gameObject.SetActive(false);  // Deactivate the current weapon
+            _weapon.gameObject.SetActive(false);
             _weapon = null;
-            _ammo = null;  // Remove ammo reference
+            _ammo = null;
         }
     }
 
-    public void OnEquip()
+    public void HolsterWeapon()
     {
-        _EquipWeapon();
-        _switchingWeapon = false;  // Silah deðiþtirme iþlemi tamamlandý
+        if (_switchingWeapon)
+        {
+            return;
+        }
+        if (_weapon != null)
+        {
+            _switchingWeapon = true;
+            _animator.SetTrigger("Holster");
+        }
     }
 
     public void OnHolster()
     {
         _HolsterWeapon();
-
         if (_weaponToEquip != null)
         {
             OnEquip();
         }
-
-        _switchingWeapon = false; // Silah kýlýfa koyma iþlemi tamamlandý
     }
 
     public void ApplyDamage(Character shooter, Transform hit, float damage)
@@ -357,25 +349,19 @@ public class Character : MonoBehaviour
             {
                 _health = 0;
                 SetRagdollStatus(true);
-
-                // Handle missing RigBuilder and ThirdPersonController gracefully
-                if (_rigManager != null)
+                Destroy(_rigManager);
+                Destroy(GetComponent<RigBuilder>());
+                Destroy(_animator);
+                ThirdPersonController thirdPersonController = GetComponent<ThirdPersonController>();
+                if (thirdPersonController != null)
                 {
-                    Destroy(_rigManager);
+                    Destroy(thirdPersonController);
                 }
-
-                Animator animator = GetComponent<Animator>();
-                if (animator != null)
-                {
-                    Destroy(animator);
-                }
-
                 CharacterController controller = GetComponent<CharacterController>();
                 if (controller != null)
                 {
                     Destroy(controller);
                 }
-
                 Destroy(this);
             }
         }
@@ -392,24 +378,27 @@ public class Character : MonoBehaviour
 
     public void ReloadFinished()
     {
-        if (_weapon != null && _ammo != null)
+        if (_weapon != null && _weapon.ammo < _weapon.clipSize && _ammo != null && _ammo.amount > 0)
         {
-            int amount = Mathf.Min(_weapon.clipSize - _weapon.ammo, _ammo.amount);
-            _weapon.ammo += amount;
+            int amount = _weapon.clipSize - _weapon.ammo;
+            if (_ammo.amount < amount)
+            {
+                amount = _ammo.amount;
+            }
             _ammo.amount -= amount;
+            _weapon.ammo += amount;
         }
-
         _reloading = false;
-    }
-
-    public void EquipFinished()
-    {
-        _switchingWeapon = false; // Silah deðiþtirme iþlemi tamamlandý
     }
 
     public void HolsterFinished()
     {
-        _switchingWeapon = false; // Silah kýlýfa koyma iþlemi tamamlandý
+        _switchingWeapon = false;
+    }
+
+    public void EquipFinished()
+    {
+        _switchingWeapon = false;
     }
 
     private void SetLayer(Transform root, int layer)
@@ -420,4 +409,5 @@ public class Character : MonoBehaviour
             child.gameObject.layer = layer;
         }
     }
+
 }
