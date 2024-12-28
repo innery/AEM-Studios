@@ -28,7 +28,7 @@ public class Character : MonoBehaviour
     private Rigidbody[] _ragdollRigidbodies = null;
     private Collider[] _ragdollColliders = null;
 
-    private float _health = 100;
+    public float _health = 100;
 
     private bool _grounded = false; public bool isGrounded { get { return _grounded; } set { _grounded = value; } }
     private bool _walking = false; public bool walking { get { return _walking; } set { _walking = value; } }
@@ -363,6 +363,7 @@ public class Character : MonoBehaviour
                     Destroy(controller);
                 }
                 Destroy(this);
+                Destroy(GetComponent<AILocomation>());
             }
         }
     }
