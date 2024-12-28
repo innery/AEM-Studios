@@ -6,6 +6,8 @@ TagManager:
   tags:
   - CinemachineTarget
   - Projectile
+  - Enemy
+  - Bot
   layers:
   - Default
   - TransparentFX
@@ -38,6 +40,7 @@ TagManager:
   - Overlay
   - SubCharacter
   - Character
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0

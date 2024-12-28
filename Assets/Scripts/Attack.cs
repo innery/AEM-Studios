@@ -9,13 +9,21 @@ public class AttackScript : MonoBehaviour
 
     public Transform target; // Hedef karakter (Inspector'dan atanabilir)
     private Character botCharacter; // Bu botun karakter scripti
+    private Animator animator; // Botun Animator bileþeni
 
     void Start()
     {
         botCharacter = GetComponent<Character>();
+        animator = GetComponent<Animator>();
+
         if (botCharacter == null)
         {
             Debug.LogError("Character scripti bot üzerinde bulunamadý!");
+        }
+
+        if (animator == null)
+        {
+            Debug.LogError("Animator bileþeni bot üzerinde bulunamadý!");
         }
 
         if (target == null)
@@ -47,6 +55,9 @@ public class AttackScript : MonoBehaviour
         if (Time.time - lastDamageTime >= damageInterval)
         {
             lastDamageTime = Time.time;
+
+            // Yumruk atma animasyonunu tetikle
+            animator.SetTrigger("Punch");
 
             // Hedefte Character scripti varsa hasar uygula
             if (target.TryGetComponent(out Character targetCharacter))

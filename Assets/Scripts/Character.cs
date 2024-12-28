@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.TextCore.Text;
@@ -17,7 +18,7 @@ public class Character : MonoBehaviour
     [SerializeField] private Transform _weaponHolder = null;
 
     private Weapon _weapon = null; public Weapon weapon { get { return _weapon; } }
-    private Ammo _ammo = null; public Ammo ammo { get { return _ammo; } }
+    public Ammo _ammo = null; public Ammo ammo { get { return _ammo; } }
     private List<Item> _items = new List<Item>();
     private Animator _animator = null;
     private RigManager _rigManager = null;
@@ -29,6 +30,7 @@ public class Character : MonoBehaviour
     private Collider[] _ragdollColliders = null;
 
     public float _health = 100;
+    private bool isDead = false;
 
     private bool _grounded = false; public bool isGrounded { get { return _grounded; } set { _grounded = value; } }
     private bool _walking = false; public bool walking { get { return _walking; } set { _walking = value; } }
@@ -66,8 +68,11 @@ public class Character : MonoBehaviour
         Initialize(new Dictionary<string, int> { { "Scar", 1 }, { "AKM", 1 }, { "7.62x39mm", 1000 } });
     }
 
+
     private void Start()
     {
+
+
         if (isLocalPlayer)
         {
             SetLayer(transform, LayerMask.NameToLayer("LocalPlayer"));
@@ -80,6 +85,7 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
+
         bool armed = _weapon != null;
 
         _aimLayerWieght = Mathf.Lerp(_aimLayerWieght, _switchingWeapon || (armed && (_aiming || _reloading)) ? 1f : 0f, 10f * Time.deltaTime);
@@ -279,7 +285,7 @@ public class Character : MonoBehaviour
 
     private void _EquipWeapon()
     {
-        if(_weaponToEquip != null)
+        if (_weaponToEquip != null)
         {
             _weapon = _weaponToEquip;
             _weaponToEquip = null;
@@ -342,6 +348,7 @@ public class Character : MonoBehaviour
 
     public void ApplyDamage(Character shooter, Transform hit, float damage)
     {
+        BotManager botManager = FindObjectOfType<BotManager>();
         if (_health > 0)
         {
             _health -= damage;
@@ -362,6 +369,7 @@ public class Character : MonoBehaviour
                 {
                     Destroy(controller);
                 }
+                botManager.OnBotKilled();
                 Destroy(this);
                 Destroy(GetComponent<AILocomation>());
             }
@@ -410,5 +418,12 @@ public class Character : MonoBehaviour
             child.gameObject.layer = layer;
         }
     }
+
+    public float GetHealth()
+    {
+        return _health;
+    }
+
+
 
 }

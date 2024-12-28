@@ -8,7 +8,7 @@ public class Weapon : Item
     [SerializeField] private string _ammoID = ""; public string ammoID { get { return _ammoID; }}
     [SerializeField] private float _damage = 1f;
     [SerializeField] private float _fireRate = 0.2f;
-    [SerializeField] private int _clipSize = 30; public int clipSize { get { return _clipSize; }}
+    [SerializeField] public int _clipSize = 30; public int clipSize { get { return _clipSize; }}
 
     [SerializeField] private float _handKick = 5f; public float handKick { get {return _handKick; }}
     [SerializeField] private float _bodyKick = 5f; public float bodyKick { get { return _bodyKick; }}
