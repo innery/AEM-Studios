@@ -459,6 +459,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 17119380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &61136530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 61136531}
+  m_Layer: 0
+  m_Name: WeaponHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &61136531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61136530}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7010199, y: -0.34843904, z: -0.612514, w: 0.10948917}
+  m_LocalPosition: {x: -0.064, y: 0.445, z: -0.051}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1716750841}
+  m_Father: {fileID: 997105448}
+  m_LocalEulerAnglesHint: {x: -200.976, y: -41.465, z: -0.908996}
 --- !u!114 &66362074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12238,7 +12270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9022137772155252500, guid: 6728fb9f24996be4fa822a0437e75982, type: 3}
       propertyPath: path
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9022137772155252500, guid: 6728fb9f24996be4fa822a0437e75982, type: 3}
       propertyPath: agent
@@ -12246,7 +12278,10 @@ PrefabInstance:
       objectReference: {fileID: 1822171304}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1024181859239264176, guid: 6728fb9f24996be4fa822a0437e75982, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 61136531}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1024181860639467860, guid: 6728fb9f24996be4fa822a0437e75982, type: 3}
       insertIndex: -1
@@ -17751,6 +17786,11 @@ MonoBehaviour:
   ignore: 0
   backupObject: {fileID: 0}
   terrain: {fileID: 0}
+--- !u!4 &997105448 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1024181859239264176, guid: 6728fb9f24996be4fa822a0437e75982, type: 3}
+  m_PrefabInstance: {fileID: 810523441}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1010818864
 GameObject:
   m_ObjectHideFlags: 0
@@ -36428,6 +36468,37 @@ MonoBehaviour:
   markerStartUVY: 0.010308266
   customPoints: []
   handleObject: {fileID: 0}
+--- !u!1 &1716750840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1716750841}
+  m_Layer: 0
+  m_Name: LeftHand _target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &1716750841
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716750840}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.9220158, y: 0.29566166, z: 0.01763157, w: -0.24931955}
+  m_LocalPosition: {x: 0.052970283, y: -0.29461607, z: -0.18985927}
+  m_LocalScale: {x: 0.1, y: 0.100000024, z: 0.100000024}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 61136531}
+  m_LocalEulerAnglesHint: {x: 39.296, y: 555.978, z: 233.437}
 --- !u!1 &1720363901
 GameObject:
   m_ObjectHideFlags: 0
@@ -40123,7 +40194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLocalPlayer: 0
   _id: 
-  _weaponHolder: {fileID: 0}
+  _weaponHolder: {fileID: 61136531}
   _health: 100
 --- !u!1001 &1831727201
 PrefabInstance:
@@ -44283,7 +44354,7 @@ Transform:
   m_GameObject: {fileID: 1867995351}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 726.1, y: 19.63, z: 691.05}
+  m_LocalPosition: {x: 642.2, y: 19.63, z: 691.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
