@@ -8,12 +8,11 @@ public class CharacterSelectionManager : MonoBehaviour
     // Karakter seçim butonlarý
     public ButtonManager character1Button;
     public ButtonManager character2Button;
-    public ButtonManager character3Button;
+   
 
     // Iconlarýn referanslarý
     public Image character1Icon;
     public Image character2Icon;
-    public Image character3Icon;
 
     // Start, Options, Exit butonlarý
     public ButtonManager startButton;
@@ -32,7 +31,7 @@ public class CharacterSelectionManager : MonoBehaviour
         // Karakter seçim butonlarý olaylarýný baðla
         character1Button.onClick.AddListener(() => SelectCharacter(1));
         character2Button.onClick.AddListener(() => SelectCharacter(2));
-        character3Button.onClick.AddListener(() => SelectCharacter(3));
+        
 
         // Start, Options, Exit butonlarý olaylarýný baðla
         startButton.onClick.AddListener(OnStartGame);
@@ -59,10 +58,7 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             character2Icon.color = selectedColor;
         }
-        else if (characterID == 3)
-        {
-            character3Icon.color = selectedColor;
-        }
+       
 
         Debug.Log($"Seçilen karakter: {selectedCharacter}");
     }
@@ -72,7 +68,7 @@ public class CharacterSelectionManager : MonoBehaviour
         // Tüm iconlarý varsayýlan renge döndür
         character1Icon.color = defaultColor;
         character2Icon.color = defaultColor;
-        character3Icon.color = defaultColor;
+        
     }
 
     public void OnStartGame()
@@ -90,12 +86,9 @@ public class CharacterSelectionManager : MonoBehaviour
         }
         else if (selectedCharacter == 2)
         {
-            SceneManager.LoadScene("Character2Scene");
+            SceneManager.LoadScene("2");
         }
-        else if (selectedCharacter == 3)
-        {
-            SceneManager.LoadScene("Character3Scene");
-        }
+        
     }
 
     public void OnOptions()
